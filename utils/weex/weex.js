@@ -138,7 +138,7 @@ function writeJson(jsVersion) {
     });
 }
 
-function minWeex() {
+function minWeex(isWeexEros) {
     var timestamp = +new Date(),
         jsVersion = getMd5Version(),
         md5File = path.resolve(process.cwd(), 'dist/js/_pages/md5.json');
@@ -148,16 +148,80 @@ function minWeex() {
     versionInfo['timestamp'] = timestamp;
     versionInfo['jsPath'] = readConfig.get('jsPath');
 
+
     jsonfile.writeFileSync(md5File, _.assign({
         filesMd5: versionMap
     }, versionInfo));
+
+
     zipFolder(path.resolve(process.cwd(), 'dist/js/_pages'), path.resolve(process.cwd(), 'dist/js/' + jsVersion + '.zip'), function(err) {
         if (err) {
             console.log('min-weex-zip-error', err);
         } else {
+            isWeexEros && weexErosHandler(jsVersion)
             writeJson(jsVersion);
         }
     });
+}
+
+function weexErosHandler(jsVersion) {
+    var jsPageConfigPath = path.resolve(process.cwd(), 'dist/pages.config'),
+        jsZipPath = path.resolve(process.cwd(), 'dist/js/' + jsVersion + '.zip'),
+        platformConfig = path.resolve(process.cwd(), 'platform.json'),
+        iosZipTarget = path.resolve(process.cwd(), '../' + readConfig.get('iosZipFolder')),
+        androidZipTarget = path.resolve(process.cwd(), '../' + readConfig.get('androidZipFolder'));
+
+    // 写入版本信息 让客户端直接读取
+    jsonfile.writeFileSync(jsPageConfigPath, _.assign({
+        filesMd5: versionMap
+    }, versionInfo)); 
+
+    Process.exec('cp ' + jsZipPath + ' ' + iosZipTarget + '/pages.zip', function(error, stdout, stderr) {
+        if (error !== null) {
+            print.info('exec error: ' + error);
+            return;
+        }
+        console.log('bm-eros | zip包传输至ios目标文件夹：' + iosZipTarget)
+    });  
+    Process.exec('cp ' + jsPageConfigPath + ' ' + iosZipTarget, function(error, stdout, stderr) {
+        if (error !== null) {
+            print.info('exec error: ' + error);
+            return;
+        }
+        console.log('bm-eros | page.config文件传输至ios目标文件夹：' + iosZipTarget)
+       
+    }); 
+    Process.exec('cp ' + platformConfig + ' ' + iosZipTarget, function(error, stdout, stderr) {
+        if (error !== null) {
+            print.info('exec error: ' + error);
+            return;
+        }
+        console.log('bm-eros | 平台配置platform.js文件传输至ios目标文件夹：' + iosZipTarget)
+       
+    });
+    Process.exec('cp ' + jsZipPath + ' ' + androidZipTarget + '/pages.zip', function(error, stdout, stderr) {
+        if (error !== null) {
+            print.info('exec error: ' + error);
+            return;
+        }
+        console.log('bm-eros | zip包传输至android目标文件夹：' + androidZipTarget)
+    });  
+    Process.exec('cp ' + jsPageConfigPath + ' ' + androidZipTarget, function(error, stdout, stderr) {
+        if (error !== null) {
+            print.info('exec error: ' + error);
+            return;
+        }
+        console.log('bm-eros | page.config文件传输至android目标文件夹：' + androidZipTarget)
+       
+    }); 
+    Process.exec('cp ' + platformConfig + ' ' + androidZipTarget, function(error, stdout, stderr) {
+        if (error !== null) {
+            print.info('exec error: ' + error);
+            return;
+        }
+        console.log('bm-eros | 平台配置platform.js文件传输至android目标文件夹：' + androidZipTarget)
+       
+    });                 
 }
 
 module.exports = {

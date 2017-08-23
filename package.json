@@ -1,6 +1,6 @@
 {
     "name": "BMFE_scaffold",
-    "version": "0.3.3",
+    "version": "0.3.9",
     "description": "本木前端脚手架",
     "bin": {
         "BM": "./bin/BM.js"

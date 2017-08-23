@@ -5,6 +5,30 @@
 @Last modified by:   songqi
 @Last modified time: 2017-05-25
 -->
+# 0.3.9
+* BM eros init ios/android 在控制台打印进度
+
+# 0.3.8
+* 添加init中weex-eros相关逻辑
+
+# 0.3.7
+* update -> init
+* 新增 BM eros min 发送 eros zip包到conifg中对应的文件目录下
+* 新增 BM eros init ios 加载和更新ios依赖
+* 新增 BM eros init android 加载和更新android依赖
+* 添加init中weex-eros相关逻辑
+
+# 0.3.6
+* 优化eros打包逻辑
+* 新增 BM eros min 发送 eros zip包到conifg中对应的文件目录下
+* 新增 BM eros update ios 加载和更新ios依赖
+* 新增 BM eros update android 加载和更新android依赖
+
+# 0.3.5
+* 修改weex-eros中android传输路径错误的bug
+
+# 0.3.4
+* 兼容weex-eros
 
 # 0.3.3
 * 转发由于各种问题还无法实现
